@@ -1,29 +1,33 @@
 import numpy as np
 from cprint import cprint
 
-from data_structures.grid import Grid2D, Point
+from data_structures.grid import Grid3D, Point
 from mapper import Mapper
 from data_structures.sensor import Sensor
 from data_structures.observer import Observer
 
-from utils import visualize, png_to_grid2d
+from utils import visualize3d, json_to_grid3d
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from matplotlib.collections import LineCollection
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
+from skspatial.objects import Sphere
 
+def test_qualitative(positions, map_name='simple_box'):
+    scene_fig = plt.figure()
+    scene_ax = []
+    scene_ax.append(scene_fig.add_subplot(2, 1, 1, projection='3d')) 
+    scene_ax.append(scene_fig.add_subplot(2, 1, 2, projection='3d'))
 
-def test_qualitative(positions, map_name='simple_obstacle'):
-    scene_fig, scene_ax = plt.subplots(1, 2, figsize=(16, 8))
+    json_map_path = f'test_data/{map_name}.json'
 
-    png_map_path = f'test_data/{map_name}.png'
-    gt_grid = Grid2D(0.1, 40, 40, 0.001, 0.999)
-    gt_grid = png_to_grid2d(gt_grid, png_map_path)
+    gt_grid = Grid3D(1.0, 22, 22, 52, 0.001, 0.999) if map_name == 'pineapple' else Grid3D(0.5, 50, 50, 10, 0.001, 0.999)
+    gt_grid = json_to_grid3d(gt_grid, json_map_path)
 
     observer_obj = Observer(gt_grid)
 
-    grid = Grid2D(0.1, 40, 40, 0.001, 0.999)
-    sensor_obj = Sensor(max_range=2.0, num_rays=200)
+    grid = Grid3D(1.0, 22, 22, 52, 0.001, 0.999) if map_name == 'pineapple' else Grid3D(0.5, 50, 50, 10, 0.001, 0.999)
+    sensor_obj = Sensor(max_range=5.0, max_height=10.0, num_rays=210)
 
     mapper_obj = Mapper(grid, sensor_obj, observer_obj)
 
@@ -45,51 +49,41 @@ def test_qualitative(positions, map_name='simple_obstacle'):
     scene_ax[1].grid(which='major', axis='both', linestyle='-')
     scene_ax[1].grid(which='minor', axis='both', linestyle='-')
     scene_ax[1].set_title('Range sensor getting data in real world')
-
-    visualize(gt_grid, ax=scene_ax[1])
-    scene_ax[1].set_xlim([0.0, gt_grid.resolution * gt_grid.width])
-    scene_ax[1].set_ylim([0.0, gt_grid.resolution * gt_grid.height])
     scene_ax[1].set_xlabel('Cell Space: Cols, Point Space: X (meters)')
     scene_ax[1].set_ylabel('Cell Space: Rows, Point Space: Y (meters)')
     scene_ax[1].set_aspect('equal')
+    visualize3d(gt_grid, ax=scene_ax[1])
 
     rays_vis = []
-    rays_collection = LineCollection(rays_vis, color='black', alpha=0.5)
+    rays_collection = Line3DCollection(rays_vis, color='lime', alpha=0.5)
     scene_ax[1].add_collection(rays_collection)
-    rob = plt.Circle((0.0, 0.0), grid.resolution / 2, color='r')
-    scene_ax[1].add_artist(rob)
     for pos in positions:
-        rob.center = pos.x, pos.y
-
         endpoints = mapper_obj.add_obs(pos)
         segs = []
         colors = []
         for i in range(len(endpoints)):
             segs.append(
-                np.array([[pos.x, pos.y], [endpoints[i].x, endpoints[i].y]]))
+                np.array([[pos.x, pos.y, pos.z], [endpoints[i].x, endpoints[i].y, endpoints[i].z]]))
 
         rays_collection.set_segments(segs)
 
-        vis_obj = visualize(grid, ax=scene_ax[0])
-        scene_ax[0].set_xlim([0.0, grid.resolution * grid.width])
-        scene_ax[0].set_ylim([0.0, grid.resolution * grid.height])
+        sphere = Sphere([pos.x, pos.y, pos.z], grid.resolution / 2)
+        sphere.plot_3d(scene_ax[1], alpha=0.5, color='r')
+    vis_obj = visualize3d(grid, ax=scene_ax[0])
 
-        hl = scene_fig.colorbar(vis_obj, ax=scene_ax[0])
-
-        plt.draw()
-        plt.pause(0.2)
-        hl.remove()
+    plt.draw()
+    plt.show()
 
 
-def test_quantitative(positions, map_name='simple_obstacle'):
-    png_map_path = f'test_data/{map_name}.png'
-    gt_grid = Grid2D(0.1, 40, 40, 0.001, 0.999)
-    gt_grid = png_to_grid2d(gt_grid, png_map_path)
+def test_quantitative(positions, map_name='simple_box'):
+    json_map_path = f'test_data/{map_name}.json'
+    gt_grid = Grid3D(1.0, 22, 22, 52, 0.001, 0.999) if map_name == 'pineapple' else Grid3D(0.5, 50, 50, 10, 0.001, 0.999)
+    gt_grid = json_to_grid3d(gt_grid, json_map_path)
 
     observer_obj = Observer(gt_grid)
 
-    grid = Grid2D(0.1, 40, 40, 0.001, 0.999)
-    sensor_obj = Sensor(max_range=2.0, num_rays=200)
+    grid = Grid3D(1.0, 22, 22, 52, 0.001, 0.999) if map_name == 'pineapple' else Grid3D(0.5, 50, 50, 10, 0.001, 0.999)
+    sensor_obj = Sensor(max_range=2.0, max_height=2.0, num_rays=50)
 
     mapper_obj = Mapper(grid, sensor_obj, observer_obj)
 
@@ -100,7 +94,7 @@ def test_quantitative(positions, map_name='simple_obstacle'):
         grid_numpy_correct = np.load(npz_data_file)['grid_numpy']
         grid_numpy = grid.to_numpy()
         corrects = np.abs(grid_numpy_correct - grid_numpy) < 1e-3
-        avg = np.sum(corrects) / grid.width / grid.height
+        avg = np.sum(corrects) / grid.width / grid.height / grid.depth
         if avg >= 0.95:
             scores_arr.append(1.0)
         else:
@@ -110,63 +104,38 @@ def test_quantitative(positions, map_name='simple_obstacle'):
 
 
 if __name__ == "__main__":
-    simple_obs_positions = [
-        Point(3.36, 3.42),
-        Point(2.61, 3.36),
-        Point(1.72, 3.36),
-        Point(0.75, 3.36),
-        Point(0.27, 3.36),
-        Point(0.55, 3.07),
-        Point(0.55, 2.55),
-        Point(0.55, 2.05),
-        Point(0.55, 1.45),
-        Point(0.55, 1.03),
-        Point(0.55, 0.53),
-        Point(1.05, 1.53),
-        Point(1.45, 1.53),
-        Point(1.97, 1.53),
-        Point(2.57, 1.53),
-        Point(3.17, 1.53),
-        Point(3.45, 1.53),
-        Point(3.17, 2.05),
-        Point(3.17, 2.55),
-        Point(3.17, 3.07),
-        Point(3.17, 3.37)
-    ]
+    simple_obs_positions = [Point(float(x), float(y), float(z)) 
+                            for x in range(1, 25, 2) 
+                            for y in range(1, 25, 2) 
+                            for z in range(1, 5)]
 
-    cprint.info('Running qualitative test on simple_obstacle map')
-    test_qualitative(simple_obs_positions, 'simple_obstacle')
-    cprint.info('Running quantitative test on simple_obstacle map')
-    score = test_quantitative(simple_obs_positions, 'simple_obstacle')
-    cprint.ok('Quantitative test score for simple_obstacle map %f' % (score))
 
-    office_positions = [
-        Point(1.72, 3.13),
-        Point(1.72, 3.52),
-        Point(1.13, 3.52),
-        Point(0.58, 3.52),
-        Point(0.58, 3.13),
-        Point(0.58, 2.65),
-        Point(1.22, 2.65),
-        Point(1.55, 2.65),
-        Point(1.72, 2.65),
-        Point(1.76, 2.12),
-        Point(1.76, 1.58),
-        Point(1.76, 1.58),
-        Point(1.05, 1.37),
-        Point(0.52, 1.37),
-        Point(0.52, 1.01),
-        Point(0.52, 0.36),
-        Point(1.52, 0.36),
-        Point(2.52, 0.36),
-        Point(3.52, 0.36),
-        Point(3.52, 1.36)
-    ]
+    cprint.info('Running qualitative test on simple_box map')
+    test_qualitative(simple_obs_positions, 'simple_box')
+    cprint.info('Running quantitative test on simple_box map')
+    score = test_quantitative(simple_obs_positions, 'simple_box')
+    cprint.ok('Quantitative test score for simple_box map %f' % (score))
 
-    cprint.info('Running qualitative test on office map')
-    test_qualitative(office_positions, 'office')
-    cprint.info('Running quantitative test on office map')
-    score = test_quantitative(office_positions, 'office')
-    cprint.ok('Quantitative test score for office map %f' % (score))
+    i_love_mr_positions = [Point(float(x), float(y), float(z)) 
+                            for x in range(1, 25, 2) 
+                            for y in range(1, 25, 2) 
+                            for z in range(1, 5)]
+
+    cprint.info('Running qualitative test on i_love_mr map')
+    test_qualitative(i_love_mr_positions, 'i_love_mr')
+    cprint.info('Running quantitative test on i_love_mr map')
+    score = test_quantitative(i_love_mr_positions, 'i_love_mr')
+    cprint.ok('Quantitative test score for i_love_mr map %f' % (score))
+
+    pineapple_positions = [Point(float(x), float(y), float(z)) 
+                            for x in range(1, 22, 1) 
+                            for y in range(1, 22, 1) 
+                            for z in range(1, 50, 2)]
+
+    cprint.info('Running qualitative test on pineapple map')
+    test_qualitative(pineapple_positions, 'pineapple')
+    cprint.info('Running quantitative test on pineapple map')
+    score = test_quantitative(pineapple_positions, 'pineapple')
+    cprint.ok('Quantitative test score for pineapple map %f' % (score))
 
     plt.show()

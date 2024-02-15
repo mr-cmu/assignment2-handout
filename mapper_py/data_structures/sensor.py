@@ -1,6 +1,6 @@
-"""Ray and Sensor classes for 16-362: Mobile Robot Algorithms Laboratory
+"""Ray and Sensor classes for 16-761: Mobile Robot Algorithms Laboratory
 
-Author(s): Kshitij Goel, Wennie Tabib
+Author(s): Kshitij Goel, Andrew Jong, Rebecca Martin, Wennie Tabib
 """
 
 import numpy as np
@@ -9,14 +9,14 @@ from .grid import Point
 
 
 class Ray:
-    """A ray in 2D space.
+    """A ray in 3D space.
 
     Attributes:
         o: (Point) Origin of the ray
-        d: (Point) Direction vector for the ray
+        d: (Point) Direction (unit) vector for the ray
     """
 
-    def __init__(self, origin=Point(0.0, 0.0), direction=Point(0.0, 0.0)):
+    def __init__(self, origin=Point(0.0, 0.0, 0.0), direction=Point(0.0, 0.0, 0.0)):
         """Initially the origin and direction are zero."""
         self.o = origin
         self.d = direction
@@ -38,17 +38,19 @@ class Ray:
 
 
 class Sensor:
-    """A range sensor in 2D space.
+    """A range sensor in 3D space.
 
     Attributes:
         num_rays: (int) Total number of rays.
-        max_range: (float) Maximum reliable range for the sensor.
+        max_range: (float) Maximum reliable range around the sensor.
+        max_height: (float) Maximum reliable range above and below sensor
     """
 
-    def __init__(self, max_range=1.0, num_rays=20):
-        """Default max range is 1.0 meters and the number of rays are 20."""
+    def __init__(self, max_range=1.0, max_height=3.0, num_rays=70):
+        """Default max range is 1.0 meters and the number of rays are 70."""
         self.num_rays = num_rays
         self.max_range = max_range
+        self.max_height = max_height
 
     def rays(self, pos):
         """Generate rays at the input position.
@@ -58,7 +60,7 @@ class Sensor:
         and `2.0 * np.pi`
 
         Args:
-            pos: (Point) Position of the sensor in 2D point space.
+            pos: (Point) Position of the sensor in 3D point space.
 
         Returns:
             rays: (list of Ray) List of `num_ray` amount of ray objects.

@@ -17,7 +17,7 @@ all python scripts that enable filtering-based localization.
 This repository uses Git LFS. Perform the following in a terminal on your computer.
 
 ```bash
-git clone git@github.com:mral-cmu/assignment2-handout.git
+git clone git@github.com:mr-cmu/assignment2-handout.git
 cd assignment2-handout
 git lfs install
 git lfs pull
@@ -601,4 +601,4 @@ ARTEMIS-1 MISSION", NASA Technical Report, 2023 [link](https://ntrs.nasa.gov/api
 
 
 ## Author(s)
-Kshitij Goel, Wennie Tabib
+Kshitij Goel, Andrew Jong, Rebecca Martin, Wennie Tabib
