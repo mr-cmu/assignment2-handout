@@ -120,7 +120,7 @@ def visualize3d(grid, ax, val_fn=lambda x, v: x.probability(v)):
 
     ax.set_title(f"Grid3D, Cell Resolution={grid.resolution}m^3")
 
-    #ax.set_aspect("equal")
+    ax.set_aspect("equal")
     # ax.set_box_aspect([1,1,1])
 
     return ax
