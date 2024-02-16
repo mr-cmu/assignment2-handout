@@ -86,7 +86,9 @@ python3 grid_test.py --map simple_box
 ```
 should look like:
 
-![](imgs/simple_box.jpg)
+<p align="center">
+<img src="imgs/simple_box.jpg" alt="simple_box" width="500"/>
+</p>
 
 In the terminal, you should see:
 ```txt
@@ -110,8 +112,10 @@ main function of `mapper_py/grid_test.py`, you will see several tests for this f
 that test corner conditions such as: slopped rays, rays going outside of the map bounds, etc.
 Example output (second figure) after running `python3 grid_test.py --map simple_box`:
 
-![](imgs/traverse_1m.jpg)
-![](imgs/traverse_0.5m.jpg)
+<p align="center">
+<img src="imgs/traverse_1m.jpg" alt="traverse_1m" width="500"/>
+<img src="imgs/traverse_0.5m.jpg" alt="traverse_0.5m" width="500"/>
+</p>
 
 In the terminal, you should see:
 ```txt
