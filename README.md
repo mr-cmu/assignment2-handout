@@ -14,8 +14,6 @@ all python scripts that enable filtering-based localization.
 2. Collaboration is encouraged but you should write final code on your own.
 
 ### Setup
-This repository uses Git LFS. Perform the following in a terminal on your computer.
-
 ```bash
 git clone git@github.com:mr-cmu/assignment2-handout.git
 cd assignment2-handout
