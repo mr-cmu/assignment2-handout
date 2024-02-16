@@ -19,21 +19,19 @@ This repository uses Git LFS. Perform the following in a terminal on your comput
 ```bash
 git clone git@github.com:mr-cmu/assignment2-handout.git
 cd assignment2-handout
-git lfs install
-git lfs pull
 ```
 
 Now, create a python virtual environment.
 ```bash
-python3.8 -m .venv venv
+conda env create -f environment.yaml
 ```
 Source the environment
 ```bash
-source .venv/bin/activate
+conda activate mr
 ```
-You will need to install the following dependencies.
+If you opt not to use conda or use a different environment isolation tool, you will need to install the following dependencies.
 ```bash
-pip install cprint numpy matplotlib opencv-python
+pip install cprint numpy matplotlib opencv-python scikit-spatial
 ```
 
 ## 1. Occupancy Grid Mapping (60 points)
