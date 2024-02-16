@@ -96,6 +96,7 @@ test_data_structure successful.
 Additionally, there is an `i_love_mr` and `pineapple` map available for testing.
 
 ![](imgs/i_love_mr.jpg)
+![](imgs/pineapple.jpg)
 
 In the autograder, we will
 run several unseen maps to test the accuracy of your solution. Passing `test_data_structure`
@@ -108,6 +109,7 @@ that test corner conditions such as: slopped rays, rays going outside of the map
 Example output (second figure) after running `python3 grid_test.py --map simple_box`:
 
 ![](imgs/traverse_1m.jpg)
+![](imgs/traverse_0.5m.jpg)
 
 In the terminal, you should see:
 ```txt
