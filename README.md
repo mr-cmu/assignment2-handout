@@ -95,8 +95,10 @@ test_data_structure successful.
 
 Additionally, there is an `i_love_mr` and `pineapple` map available for testing.
 
-![](imgs/i_love_mr.jpg)
-![](imgs/pineapple.jpg)
+<p align="center">
+<img src="imgs/i_love_mr.jpg" alt="i_love_mr" width="500"/>
+<img src="imgs/pineapple.jpg" alt="pineapple" width="300"/>
+</p>
 
 In the autograder, we will
 run several unseen maps to test the accuracy of your solution. Passing `test_data_structure`
