@@ -41,34 +41,34 @@ The occupancy grid map is a spatial grid where each cell denotes the occupancy
 state for all the points within that cell. In the first part of this assignment,
 our goal is to implement an occupancy grid mapping system. To simplify the problem,
 we make the following assumptions:
-- The robot is perfectly localized on a 3D plane
+- The robot is perfectly localized in the 3D world
 - The robot size is negligible ("point" robot) and it can move in any direction on a 3D plane
 
 To create a 3D map of the environment, we first need to create a data structure
 to store and query occupancy values.
 
 ### 1.1 Grid Data Structure (30 points)
-In this section, we will write the class `Grid3D` that implements a data
+In this section, we will write the class `Grid3d` that implements a data
 structure for such a grid for 3D environments.
 
 Open the Python script `mapper_py/data_structures/grid.py`. You will see several class definitions.
 
 1. `Cell`: A single cell in the occupancy grid map.
 2. `Point`: A point in the 3D space.
-3. `Grid3D`: Occupancy grid data structure.
+3. `Grid3d`: Occupancy grid data structure.
 
-All of the graded parts of this part are within the `Grid3D` class. These
+All of the graded parts of this part are within the `Grid3d` class. These
 parts are marked by `TODO` and are necessary to complete for full credit.
 
-1. `to_index`: Get the index in the `Grid3D` object for the input `cell` object.
+1. `to_index`: Get the index in the `Grid3d` object for the input `cell` object.
 2. `from_index`: Get the `Cell` corresponding to an index `idx`.
 3. `get`, `get_cell`, `get_row_col_layer`: Get the occupancy data at the input index `idx` or cells.
 4. `set`, `set_cell`, `set_row_col_layer`: Set the occupancy data at the input index `idx` (or cells) to `value`.
 5. `probability`: Convert logodds represention to probability.
 6. `logodds`: Convert probability representation to logodds.
-7. `cell_to_point`, `cell_to_point_row_col_layer`: Get the bottom lower left hand corner of the input `cell` in the 3D point space. In a grid of resolution `0.1`, the lower left hand corner of the cell `(row = 70, col = 20)` corresponds to the point `(x=0.2, y=0.7)`. This is in contrast to the center point of the cell which is `(x=0.25, y=0.75)`.
+7. `cell_to_point`, `cell_to_point_row_col_layer`: Get the bottom lower left hand corner of the input `cell` in the 3D point space. In a grid of resolution `0.1`, the lower left hand corner of the cell `(row = 70, col = 20, layer = 10)` corresponds to the point `(x=0.2, y=0.7 z=0.1)`. This is in contrast to the center point of the cell which is `(x=0.25, y=0.75 z=0.15)`.
 8. `point_to_cell`: Get the `Cell` corresponding to the input 3D point.
-9.  `inQ`: Check if the input 3D point is in the grid bounds or not.
+9.  `is_in_grid`: Check if the input 3D point is in the grid bounds or not.
 10. `traverse`: Given a line segment (start and end points), return a tuple (`success`, `raycells`)
 where `success` is a bool indicating whether the traversal through the grid was successful and `raycells`
 is a list of cells that were traversed if successful. You may find the paper by Amanatides and Woo [1]
@@ -80,7 +80,7 @@ functions that we will use for autograding: `test_data_structure` and
 `test_traversal`.
 
 `test_data_structure` tests your solutions for `1` through `7` above. It reads one of the example
-maps from the `test_data` subdirectory and creates a `Grid3D` object from it using the `json_to_grid3d`
+maps from the `test_data` subdirectory and creates a `Grid3d` object from it using the `json_to_grid3d`
 method in `mapper_py/utils.py`. The grid is then visualized using the `visualize3d` method from
 `mapper_py/utils.py`. `json_to_grid3d` and `visualize3d` internally call the methods `1` to `7` mentioned above.
 Example output for:
@@ -90,14 +90,18 @@ python3 grid_test.py --map simple_box
 ```
 should look like:
 
-![](imgs/example-output-1_1.png)
+![](imgs/simple_box.jpg)
 
 In the terminal, you should see:
 ```txt
 test_data_structure successful.
 ```
 
-Additionally, there is an `i_love_mr` map available for testing. In the autograder, we will
+Additionally, there is an `i_love_mr` and `pineapple` map available for testing.
+
+![](imgs/i_love_mr.jpg)
+
+In the autograder, we will
 run several unseen maps to test the accuracy of your solution. Passing `test_data_structure`
 is worth 10 points.
 
@@ -107,30 +111,55 @@ main function of `mapper_py/grid_test.py`, you will see several tests for this f
 that test corner conditions such as: slopped rays, rays going outside of the map bounds, etc.
 Example output (second figure) after running `python3 grid_test.py --map simple_box`:
 
-![](imgs/example-output-1_2.png)
+![](imgs/traverse_1m.jpg)
 
 In the terminal, you should see:
 ```txt
-traverse function succeeded, number of traced cells: 16
-test_traversal successful.
-traverse function succeeded, number of traced cells: 35
-test_traversal successful.
-traverse function succeeded, number of traced cells: 16
-test_traversal successful.
-traverse function succeeded, number of traced cells: 16
-test_traversal successful.
-traverse function succeeded, number of traced cells: 27
-test_traversal successful.
-traverse function succeeded, number of traced cells: 27
-test_traversal successful.
+test_data_structure successful.
 traverse function succeeded, number of traced cells: 11
-test_traversal successful.
-traverse function succeeded, number of traced cells: 24
-test_traversal successful.
+test_traversal traced_cells_01_1.0m successful.
+traverse function succeeded, number of traced cells: 11
+test_traversal traced_cells_02_1.0m successful.
+traverse function succeeded, number of traced cells: 12
+test_traversal traced_cells_03_1.0m successful.
+traverse function succeeded, number of traced cells: 14
+test_traversal traced_cells_04_1.0m successful.
+traverse function succeeded, number of traced cells: 20
+test_traversal traced_cells_05_1.0m successful.
 traverse function succeeded, number of traced cells: 7
-test_traversal successful.
+test_traversal traced_cells_06_1.0m successful.
+traverse function succeeded, number of traced cells: 6
+test_traversal traced_cells_07_1.0m successful.
+traverse function succeeded, number of traced cells: 5
+test_traversal traced_cells_08_1.0m successful.
+traverse function succeeded, number of traced cells: 8
+test_traversal traced_cells_09_1.0m successful.
+traverse function succeeded, number of traced cells: 7
+test_traversal traced_cells_10_1.0m successful.
+traverse function succeeded, number of traced cells: 11
+test_traversal traced_cells_11_1.0m successful.
 traverse function succeeded, number of traced cells: 21
-test_traversal successful.
+test_traversal traced_cells_01_0.5m successful.
+traverse function succeeded, number of traced cells: 21
+test_traversal traced_cells_02_0.5m successful.
+traverse function succeeded, number of traced cells: 23
+test_traversal traced_cells_03_0.5m successful.
+traverse function succeeded, number of traced cells: 27
+test_traversal traced_cells_04_0.5m successful.
+traverse function succeeded, number of traced cells: 40
+test_traversal traced_cells_05_0.5m successful.
+traverse function succeeded, number of traced cells: 13
+test_traversal traced_cells_06_0.5m successful.
+traverse function succeeded, number of traced cells: 11
+test_traversal traced_cells_07_0.5m successful.
+traverse function succeeded, number of traced cells: 9
+test_traversal traced_cells_08_0.5m successful.
+traverse function succeeded, number of traced cells: 16
+test_traversal traced_cells_09_0.5m successful.
+traverse function succeeded, number of traced cells: 12
+test_traversal traced_cells_10_0.5m successful.
+traverse function succeeded, number of traced cells: 23
+test_traversal traced_cells_11_0.5m successful.
 ```
 
 There are several different tests with changed start and end points that will be used within
@@ -162,7 +191,7 @@ python sensor_test.py
 ```
 should look like
 
-![](imgs/example-output-1_3.png)
+![](imgs/sensor_test.jpg)
 
 and
 ```text
@@ -178,7 +207,7 @@ You have to implement the methods `update_logodds`, `update_miss`, `update_hit`,
 in this part. The instructions are provided in the docstrings for each of the functions.
 
 Notice that you will have to implement the functions `is_cell_free`, `is_cell_occupied`, and `is_cell_unknown` 
-in the `Grid3D` class.
+in the `Grid3d` class.
 
 **Debugging and Grading**
 We have provided a testing script `mapper_py/mapper_test.py`. Running this script will show
@@ -191,11 +220,11 @@ python mapper_test.py
 ```
 the final figure for `simple_box` map will look like
 
-![](imgs/example-output-1_4.png)
+![](imgs/mapper_test.jpg)
 
 the final figure for `i_love_mr` map will look like
 
-![](imgs/example-output-1_5.png)
+![](imgs/mapper_test2.jpg)
 
 and the terminal printouts will be
 

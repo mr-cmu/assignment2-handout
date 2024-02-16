@@ -127,15 +127,16 @@ if __name__ == "__main__":
     score = test_quantitative(i_love_mr_positions, 'i_love_mr')
     cprint.ok('Quantitative test score for i_love_mr map %f' % (score))
 
-    pineapple_positions = [Point(float(x), float(y), float(z)) 
-                            for x in range(1, 22, 1) 
-                            for y in range(1, 22, 1) 
-                            for z in range(1, 50, 2)]
+    # Takes a long time to run. Optional.
+    # pineapple_positions = [Point(float(x), float(y), float(z)) 
+    #                         for x in range(1, 22, 1) 
+    #                         for y in range(1, 22, 1) 
+    #                         for z in range(1, 50, 2)]
 
-    cprint.info('Running qualitative test on pineapple map')
-    test_qualitative(pineapple_positions, 'pineapple')
-    cprint.info('Running quantitative test on pineapple map')
-    score = test_quantitative(pineapple_positions, 'pineapple')
-    cprint.ok('Quantitative test score for pineapple map %f' % (score))
+    # cprint.info('Running qualitative test on pineapple map')
+    # test_qualitative(pineapple_positions, 'pineapple')
+    # cprint.info('Running quantitative test on pineapple map')
+    # score = test_quantitative(pineapple_positions, 'pineapple')
+    # cprint.ok('Quantitative test score for pineapple map %f' % (score))
 
     plt.show()
