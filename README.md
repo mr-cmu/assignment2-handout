@@ -21,7 +21,7 @@ cd assignment2-handout
 
 Now, create a python virtual environment.
 ```bash
-conda env create -f environment.yaml
+conda env create -f environment.yml
 ```
 Source the environment
 ```bash
