@@ -62,7 +62,7 @@ parts are marked by `TODO` and are necessary to complete for full credit.
 4. `set`, `set_cell`, `set_row_col_layer`: Set the occupancy data at the input index `idx` (or cells) to `value`.
 5. `probability`: Convert logodds represention to probability.
 6. `logodds`: Convert probability representation to logodds.
-7. `cell_to_point`, `cell_to_point_row_col_layer`: Get the bottom lower left hand corner of the input `cell` in the 3D point space. In a grid of resolution `0.1`, the lower left hand corner of the cell `(row = 70, col = 20, layer = 10)` corresponds to the point `(x=0.2, y=0.7 z=0.1)`. This is in contrast to the center point of the cell which is `(x=0.25, y=0.75 z=0.15)`.
+7. `cell_to_point`, `cell_to_point_row_col_layer`: Get the bottom lower left hand corner of the input `cell` in the 3D point space. In a grid of resolution `0.1`, the lower left hand corner of the cell `(row = 7, col = 2, layer = 1)` corresponds to the point `(x=0.2, y=0.7 z=0.1)`. This is in contrast to the center point of the cell which is `(x=0.25, y=0.75 z=0.15)`.
 8. `point_to_cell`: Get the `Cell` corresponding to the input 3D point.
 9.  `is_in_grid`: Check if the input 3D point is in the grid bounds or not.
 10. `traverse`: Given a line segment (start and end points), return a tuple (`success`, `raycells`)
