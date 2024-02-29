@@ -87,20 +87,23 @@ def test_quantitative(positions, map_name='simple_box'):
 
     mapper_obj = Mapper(grid, sensor_obj, observer_obj)
 
+
+    interval = 50
     scores_arr = []
     for i, pos in enumerate(positions):
-        mapper_obj.add_obs(pos)
-        npz_data_file = f'test_data/{map_name}_mapper_test_{str(i)}.npz'
-        grid_numpy_correct = np.load(npz_data_file)['grid_numpy']
-        grid_numpy = grid.to_numpy()
-        corrects = np.abs(grid_numpy_correct - grid_numpy) < 1e-3
-        avg = np.sum(corrects) / grid.width / grid.height / grid.depth
-        if avg >= 0.95:
-            scores_arr.append(1.0)
-        else:
-            scores_arr.append(avg)
+        if i % interval == 0 or i == len(positions) - 1:
+            mapper_obj.add_obs(pos)
+            npz_data_file = f'test_data/{map_name}_mapper_test_{str(i)}.npz'
+            grid_numpy = grid.to_numpy()
+            grid_numpy_correct = np.load(npz_data_file)['grid_numpy']
+            corrects = np.abs(grid_numpy_correct - grid_numpy) < 1e-3
+            avg = np.sum(corrects) / grid.width / grid.height / grid.depth
+            if avg >= 0.95:
+                scores_arr.append(1.0)
+            else:
+                scores_arr.append(avg)
     
-    return np.sum(np.array(scores_arr)) / len(positions)
+    return np.sum(np.array(scores_arr)) / len(scores_arr)
 
 
 if __name__ == "__main__":
@@ -126,17 +129,5 @@ if __name__ == "__main__":
     cprint.info('Running quantitative test on i_love_mr map')
     score = test_quantitative(i_love_mr_positions, 'i_love_mr')
     cprint.ok('Quantitative test score for i_love_mr map %f' % (score))
-
-    # Takes a long time to run. Optional.
-    # pineapple_positions = [Point(float(x), float(y), float(z)) 
-    #                         for x in range(1, 22, 1) 
-    #                         for y in range(1, 22, 1) 
-    #                         for z in range(1, 50, 2)]
-
-    # cprint.info('Running qualitative test on pineapple map')
-    # test_qualitative(pineapple_positions, 'pineapple')
-    # cprint.info('Running quantitative test on pineapple map')
-    # score = test_quantitative(pineapple_positions, 'pineapple')
-    # cprint.ok('Quantitative test score for pineapple map %f' % (score))
 
     plt.show()
