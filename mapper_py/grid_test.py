@@ -83,30 +83,30 @@ def test_traversals(grid):
 
     # # Test slopped rays
     # these should be the same. drawing start to end should be the same as drawing end to start
-    test_traversal(grid, trav_ax, start=Point(1.0, 1.0, 1.0), end=Point(5.0, 5.0, 3.0), c="red", test_file=f'traced_cells_01_{grid.resolution}m')
-    test_traversal(grid, trav_ax, start=Point(1.0, 1.0, 5.0), end=Point(5.0, 5.0, 7.0), c="orange", test_file=f'traced_cells_02_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(1.2, 1.2, 1.2), end=Point(5.2, 5.2, 3.2), c="red", test_file=f'traced_cells_01_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(1.2, 1.2, 5.2), end=Point(5.2, 5.2, 7.2), c="orange", test_file=f'traced_cells_02_{grid.resolution}m')
     # criss cross
-    test_traversal(grid, trav_ax, start=Point(11.0, 5.0, 3.0), end=Point(6.0, 1.0, 1.0), c="yellow", test_file=f'traced_cells_03_{grid.resolution}m')
-    test_traversal(grid, trav_ax, start=Point(6.0, 5.0, 5.0), end=Point(11.0, 1.0, 7.0), c="green", test_file=f'traced_cells_04_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(11.2, 5.2, 3.2), end=Point(6.2, 1.2, 1.2), c="yellow", test_file=f'traced_cells_03_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(6.2, 5.2, 5.2), end=Point(11.2, 1.2, 7.2), c="green", test_file=f'traced_cells_04_{grid.resolution}m')
 
-    test_traversal(grid, trav_ax, start=Point(13.0, 5.0, 1.0), end=Point(19.0, 1.0, 9.0), c="springgreen", test_file=f'traced_cells_05_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(13.2, 5.2, 1.2), end=Point(19.2, 1.2, 9.2), c="springgreen", test_file=f'traced_cells_05_{grid.resolution}m')
 
     # # Test edge rays (horizontal and vertical)
     # vertical z
-    test_traversal(grid, trav_ax, start=Point(1.0, 10.0, 1.0), end=Point(1.0, 10.0, 7.0), c='cyan', test_file=f'traced_cells_06_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(1.2, 10.2, 1.2), end=Point(1.2, 10.2, 7.2), c='cyan', test_file=f'traced_cells_06_{grid.resolution}m')
     # horizontal x
-    test_traversal(grid, trav_ax, start=Point(7.0, 10.0, 5.0), end=Point(12.0, 10.0, 5.0), c='blue', test_file=f'traced_cells_07_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(7.2, 10.2, 5.2), end=Point(12.2, 10.2, 5.2), c='blue', test_file=f'traced_cells_07_{grid.resolution}m')
     # horizontal y
-    test_traversal(grid, trav_ax, start=Point(18.0, 8.0, 5.0), end=Point(18.0, 12.0, 5.0), c='blueviolet', test_file=f'traced_cells_08_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(18.2, 8.2, 5.2), end=Point(18.2, 12.2, 5.2), c='blueviolet', test_file=f'traced_cells_08_{grid.resolution}m')
 
     # # Test finer rays (horizontal and vertical)
     # vertical z
-    test_traversal(grid, trav_ax, start=Point(0.54, 15.0, 1.0), end=Point(1.89, 15.5, 7.0), c='magenta', test_file=f'traced_cells_09_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(0.54, 15.2, 1.2), end=Point(1.89, 15.5, 7.2), c='magenta', test_file=f'traced_cells_09_{grid.resolution}m')
     # horizontal x
-    test_traversal(grid, trav_ax, start=Point(7.0, 14.5, 5.0), end=Point(12.0, 15.0, 5.0), c='orchid', test_file=f'traced_cells_10_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(7.2, 14.5, 5.2), end=Point(12.2, 15.2, 5.2), c='orchid', test_file=f'traced_cells_10_{grid.resolution}m')
 
     # # Test rays going outside of the map bounds
-    test_traversal(grid, trav_ax, start=Point(15.0, 14.5, 3.0), end=Point(25.0, 30.0, 11.0), c='hotpink', test_file=f'traced_cells_11_{grid.resolution}m')
+    test_traversal(grid, trav_ax, start=Point(15.2, 14.5, 3.2), end=Point(25.2, 30.2, 11.2), c='hotpink', test_file=f'traced_cells_11_{grid.resolution}m')
 
 
 if __name__ == '__main__':
