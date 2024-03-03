@@ -37,7 +37,8 @@ def json_to_grid3d(grid, filepath):
             col = int(cell[0])
             layer = int(cell[1])
             row = int(cell[2])
-            grid.set_row_col_layer(row, col, layer, grid.max_clamp)
+            if (col >= 0 and row >= 0 and layer >= 0) and (col < grid.width and row < grid.depth and layer < grid.height):
+                grid.set_row_col_layer(row, col, layer, grid.max_clamp)
 
     return grid
 
