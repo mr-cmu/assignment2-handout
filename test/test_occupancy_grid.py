@@ -19,6 +19,9 @@ from quadrotor_simulator_py.utils import Pose
 from quadrotor_simulator_py.utils import Rot3
 from quadrotor_simulator_py.visualizer.visualizer import *
 
+def round_up_to_nearest_tenth(number):
+    return math.ceil(number * 10) / 10
+
 def common_elements_count_loop(list1, list2):
     return sum(1 for elem in set(list1) if elem in list2)
 
@@ -159,7 +162,7 @@ def test_occupancy_grid_map(DATA_DIR, config, environment_name, meshfile, visual
     score = 0.0
     score += (common_occ_indices / len(data["correct_occ_indices"])) * 0.5
     score += (common_free_indices / len(data["correct_free_indices"])) * 0.5
-    print("Score of " + str(round(score, 1)*100) + "%")
+    print("Score of " + str(round_up_to_nearest_tenth(score)*100) + "%")
 
 if __name__ == "__main__":
     test_conversions(qs_path+"/config/map.yaml")
